@@ -48,8 +48,8 @@ class SignUpViewController: UIViewController {
             user.password = "\(passwordField.text)"
             user.signUpInBackgroundWithBlock({ (succeeded: Bool, error: NSError?) -> Void in
                 if error == nil {
-                    
-                    self.navigationController?.popViewControllerAnimated(true);
+                
+                    self.dismissViewControllerAnimated(true, completion: nil)
                     
                 } else {
                     

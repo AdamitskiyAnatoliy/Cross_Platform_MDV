@@ -50,7 +50,9 @@ class LoginViewController: UIViewController {
     
     @IBAction func signUp(sender: MKButton) {
         
-        self.navigationController!.pushViewController(self.storyboard!.instantiateViewControllerWithIdentifier("SignUpController") as! UIViewController, animated: true)
+        let logInVC: UIViewController = self.storyboard!.instantiateViewControllerWithIdentifier("SignUpController") as! UIViewController
+        self.presentViewController(logInVC, animated: true, completion: nil)
+        //self.navigationController!.pushViewController(self.storyboard!.instantiateViewControllerWithIdentifier("SignUpController") as! UIViewController, animated: true)
     }
     
     
