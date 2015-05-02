@@ -14,20 +14,31 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="My Notes" >
+            android:label="EverKeep"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DetailActivity"/>
+        <activity android:name=".DetailActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".NewNoteActivity"
-            android:label="New Note"/>
+            android:label="New Note"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".NewListNoteActivity"
+            android:label="New List Note"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".NewImageNoteActivity"
+            android:label="New Image Note"
+            android:screenOrientation="portrait" />
         <activity android:name=".LogInActivity"
-            android:theme="@style/AppBaseThemeNoActionBar"/>
+            android:theme="@style/AppBaseThemeNoActionBar"
+            android:screenOrientation="portrait"/>
         <activity android:name=".SignUpActivity"
-            android:theme="@style/AppBaseThemeNoActionBar"/>
+            android:theme="@style/AppBaseThemeNoActionBar"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

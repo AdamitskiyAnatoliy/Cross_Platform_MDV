@@ -28,41 +28,62 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         addButton.layer.shadowColor = UIColor.blackColor().CGColor
         addButton.layer.shadowOffset = CGSize(width: 1.0, height: 5.0)
         
+        var timer = NSTimer.scheduledTimerWithTimeInterval(10.0, target: self,
+            selector: Selector("refreshList"), userInfo: nil, repeats: true)
     }
     
     override func viewDidAppear(animated: Bool) {
         
-        var currentUser = PFUser.currentUser()
-        if currentUser != nil {
+        refreshList()
+    }
+    
+    func refreshList () {
+        
+        if Reachability.isConnectedToNetwork() {
             
-            var pfQuery = PFQuery(className: "Note")
-            pfQuery.findObjectsInBackgroundWithBlock({ (objects: Array?, error: NSError?) -> Void in
-                if (error == nil) {
-                    
-                    if let array = objects {
+            var currentUser = PFUser.currentUser()
+            if currentUser != nil {
+                
+                var pfQuery = PFQuery(className: "Note")
+                pfQuery.findObjectsInBackgroundWithBlock({ (objects: Array?, error: NSError?) -> Void in
+                    if (error == nil) {
                         
-                        self.pfObjectArray.removeAll(keepCapacity: false)
-                        for var i = 0; i < array.count; ++i {
+                        if let array = objects {
                             
-                            self.pfObjectArray.append(array[i] as! PFObject)
+                            self.pfObjectArray.removeAll(keepCapacity: false)
+                            for var i = 0; i < array.count; ++i {
+                                
+                                self.pfObjectArray.append(array[i] as! PFObject)
+                            }
+                            self.noteTableView.reloadData()
                         }
-                        self.noteTableView.reloadData()
+                        
+                    } else {
+                        println("FAILURE")
                     }
-                    
-                } else {
-                    println("FAILURE")
-                }
-            })
-            
+                })
+                
+            } else {
+                
+                let logInVC: UIViewController = self.storyboard!.instantiateViewControllerWithIdentifier("LogInController") as! UIViewController
+                self.presentViewController(logInVC, animated: true, completion: nil)
+            }
         } else {
-            
-            let logInVC: UIViewController = self.storyboard!.instantiateViewControllerWithIdentifier("LogInController") as! UIViewController
-            self.presentViewController(logInVC, animated: true, completion: nil)
+            let alert: UIAlertView = UIAlertView(title: "No Network Connection",
+                message: "Please Reconnect Network.", delegate: nil, cancelButtonTitle: "Ok")
+            alert.show()
         }
+        println("LIST REFRESHED")
     }
     
     @IBAction func addNewNote(sender: MKButton) {
-        self.navigationController!.pushViewController(self.storyboard!.instantiateViewControllerWithIdentifier("NewNoteController") as! UIViewController, animated: true)
+        if Reachability.isConnectedToNetwork() {
+            self.navigationController!.pushViewController(self.storyboard!.instantiateViewControllerWithIdentifier("NewNoteController") as! UIViewController, animated: true)
+        } else {
+            let alert: UIAlertView = UIAlertView(title: "No Network Connection",
+                message: "Please Reconnect Network.", delegate: nil, cancelButtonTitle: "Ok")
+            alert.show()
+        }
     }
     
     @IBAction func logOut(sender: UIButton) {

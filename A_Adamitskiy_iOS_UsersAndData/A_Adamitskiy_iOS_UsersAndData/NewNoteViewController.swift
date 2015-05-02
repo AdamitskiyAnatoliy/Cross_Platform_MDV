@@ -53,15 +53,32 @@ class NewNoteViewController: UIViewController {
     
     @IBAction func done(sender: MKButton) {
         
-        let user = PFUser.currentUser()
-        var privateNote = PFObject(className:"Note")
-        privateNote["title"] = "\(titleField.text)"
-        privateNote["content"] = "\(contentField.text)"
-        privateNote["hours"] = "\(hoursField.text)"
-        privateNote.ACL = PFACL(user: user!)
-        privateNote.saveInBackground()
-        
-        self.navigationController?.popViewControllerAnimated(true)
+        if Reachability.isConnectedToNetwork() {
+            
+            if titleField.text == "" || contentField.text == "" || hoursField.text == "" {
+                
+                let alert: UIAlertView = UIAlertView(title: "Fill Out all Fields",
+                    message: "Please Fill Out Entire Form.", delegate: nil, cancelButtonTitle: "Ok")
+                alert.show()
+            } else {
+                
+                let user = PFUser.currentUser()
+                var privateNote = PFObject(className:"Note")
+                privateNote["title"] = "\(titleField.text)"
+                privateNote["content"] = "\(contentField.text)"
+                privateNote["hours"] = "\(hoursField.text)"
+                privateNote["noteType"] = "text"
+                //privateNote["image"] = nil
+                privateNote.ACL = PFACL(user: user!)
+                privateNote.saveInBackground()
+                
+                self.navigationController?.popViewControllerAnimated(true)
+            }
+        } else {
+            let alert: UIAlertView = UIAlertView(title: "No Network Connection",
+                message: "Please Reconnect Network.", delegate: nil, cancelButtonTitle: "Ok")
+            alert.show()
+        }
     }
     
     @IBAction func back(sender: UIButton) {

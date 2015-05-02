@@ -57,6 +57,7 @@ public class NewNoteActivity extends ActionBarActivity {
                     note.put("title", noteTitle.getText().toString());
                     note.put("content", noteContent.getText().toString());
                     note.put("hours", noteHours.getText().toString());
+                    note.put("noteType", "text");
                     note.setACL(new ParseACL(ParseUser.getCurrentUser()));
                     note.saveInBackground(new SaveCallback() {
                         @Override

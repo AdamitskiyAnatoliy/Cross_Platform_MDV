@@ -40,29 +40,44 @@ class SignUpViewController: UIViewController {
     
     @IBAction func signUp(sender: MKButton) {
         
-        var user = PFUser()
-        user.username = "\(usernameField.text)"
-        
-        if (passwordField.text == passConfirmField.text) {
+        if Reachability.isConnectedToNetwork() {
             
-            user.password = "\(passwordField.text)"
-            user.signUpInBackgroundWithBlock({ (succeeded: Bool, error: NSError?) -> Void in
-                if error == nil {
+            if usernameField.text == "" || passwordField.text == "" || passConfirmField.text == "" {
                 
-                    self.dismissViewControllerAnimated(true, completion: nil)
+                let alert: UIAlertView = UIAlertView(title: "Fill Out all Fields",
+                    message: "Please Fill Out Entire Form.", delegate: nil, cancelButtonTitle: "Ok")
+                alert.show()
+            } else {
+        
+                var user = PFUser()
+                user.username = "\(usernameField.text)"
+                
+                if (passwordField.text == passConfirmField.text) {
                     
+                    user.password = "\(passwordField.text)"
+                    user.signUpInBackgroundWithBlock({ (succeeded: Bool, error: NSError?) -> Void in
+                        if error == nil {
+                        
+                            self.dismissViewControllerAnimated(true, completion: nil)
+                            
+                        } else {
+                            
+                            let alert: UIAlertView = UIAlertView(title: "There was an Error.",
+                                message: "Please try again.", delegate: nil, cancelButtonTitle: "Ok")
+                            alert.show()
+                            
+                        }
+                    })
                 } else {
                     
-                    let alert: UIAlertView = UIAlertView(title: "There was an Error.",
+                    let alert: UIAlertView = UIAlertView(title: "Passwords do not match.",
                         message: "Please try again.", delegate: nil, cancelButtonTitle: "Ok")
                     alert.show()
-                    
                 }
-            })
+            }
         } else {
-            
-            let alert: UIAlertView = UIAlertView(title: "Passwords do not match.",
-                message: "Please try again.", delegate: nil, cancelButtonTitle: "Ok")
+            let alert: UIAlertView = UIAlertView(title: "No Network Connection",
+                message: "Please Reconnect Network.", delegate: nil, cancelButtonTitle: "Ok")
             alert.show()
         }
     }

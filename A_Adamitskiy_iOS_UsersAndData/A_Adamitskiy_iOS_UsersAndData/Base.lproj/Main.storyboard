@@ -205,13 +205,13 @@
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ixf-YV-45O" customClass="MKButton" customModule="A_Adamitskiy_iOS_UsersAndData">
                                 <rect key="frame" x="519" y="471" width="60" height="60"/>
-                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="60" id="Wpr-bh-GCB"/>
                                     <constraint firstAttribute="height" constant="60" id="iOf-jJ-BT0"/>
                                 </constraints>
                                 <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
-                                <state key="normal" image="action_delete.png">
+                                <state key="normal" image="action_done.png">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
@@ -220,7 +220,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <action selector="deleteNote:" destination="H19-R7-Ryg" eventType="touchUpInside" id="ByD-85-WZ4"/>
+                                    <action selector="updateNote:" destination="H19-R7-Ryg" eventType="touchUpInside" id="m6E-h7-x8E"/>
                                 </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2YJ-eL-VVt" customClass="MKTextField" customModule="A_Adamitskiy_iOS_UsersAndData" customModuleProvider="target">
@@ -237,28 +237,50 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="RzJ-4i-Xgz" customClass="MKTextField" customModule="A_Adamitskiy_iOS_UsersAndData" customModuleProvider="target">
-                                <rect key="frame" x="16" y="471" width="495" height="50"/>
+                                <rect key="frame" x="84" y="471" width="427" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="fvE-n3-u38"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                             </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6BI-lT-TVK" customClass="MKButton" customModule="A_Adamitskiy_iOS_UsersAndData">
+                                <rect key="frame" x="16" y="471" width="60" height="60"/>
+                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="60" id="wqF-YL-okr"/>
+                                    <constraint firstAttribute="height" constant="60" id="zeq-6S-LXT"/>
+                                </constraints>
+                                <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
+                                <state key="normal" image="action_delete.png">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="backgroundLayerCornerRadius">
+                                        <real key="value" value="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="deleteNote:" destination="H19-R7-Ryg" eventType="touchUpInside" id="KCB-NQ-OFi"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="QJm-Nh-mf4" firstAttribute="leading" secondItem="dJZ-cx-CR2" secondAttribute="leadingMargin" id="0Oz-HB-r5o"/>
-                            <constraint firstItem="RzJ-4i-Xgz" firstAttribute="leading" secondItem="dJZ-cx-CR2" secondAttribute="leadingMargin" id="1jh-wn-7KT"/>
+                            <constraint firstItem="RzJ-4i-Xgz" firstAttribute="leading" secondItem="dJZ-cx-CR2" secondAttribute="leadingMargin" constant="68" id="1jh-wn-7KT"/>
                             <constraint firstAttribute="trailing" secondItem="qWQ-bJ-blM" secondAttribute="trailing" id="2ZB-dW-SNW"/>
                             <constraint firstItem="qWQ-bJ-blM" firstAttribute="top" secondItem="kl9-uA-0Y3" secondAttribute="bottom" constant="-20" id="6ZQ-y1-5uk"/>
                             <constraint firstItem="QJm-Nh-mf4" firstAttribute="trailing" secondItem="dJZ-cx-CR2" secondAttribute="trailingMargin" id="7lC-sB-G0M"/>
                             <constraint firstItem="Ixf-YV-45O" firstAttribute="trailing" secondItem="dJZ-cx-CR2" secondAttribute="trailingMargin" constant="-5" id="BPw-9t-FkO"/>
-                            <constraint firstAttribute="centerX" secondItem="RzJ-4i-Xgz" secondAttribute="centerX" constant="36.5" id="Hhw-q2-fxO"/>
+                            <constraint firstItem="6BI-lT-TVK" firstAttribute="top" secondItem="QJm-Nh-mf4" secondAttribute="bottom" constant="8" id="G5s-XL-yeW"/>
+                            <constraint firstAttribute="centerX" secondItem="RzJ-4i-Xgz" secondAttribute="centerX" constant="2.5" id="Hhw-q2-fxO"/>
                             <constraint firstItem="qWQ-bJ-blM" firstAttribute="leading" secondItem="dJZ-cx-CR2" secondAttribute="leading" id="Lsc-yv-lw9"/>
                             <constraint firstItem="RzJ-4i-Xgz" firstAttribute="top" secondItem="QJm-Nh-mf4" secondAttribute="bottom" constant="8" id="MBn-nC-2BX"/>
                             <constraint firstAttribute="centerX" secondItem="QJm-Nh-mf4" secondAttribute="centerX" id="OgE-z5-YE4"/>
                             <constraint firstItem="2YJ-eL-VVt" firstAttribute="trailing" secondItem="dJZ-cx-CR2" secondAttribute="trailingMargin" id="QrN-Ec-h8a"/>
                             <constraint firstAttribute="centerX" secondItem="2YJ-eL-VVt" secondAttribute="centerX" id="WYy-uC-bTT"/>
+                            <constraint firstItem="RzJ-4i-Xgz" firstAttribute="leading" secondItem="6BI-lT-TVK" secondAttribute="trailing" constant="8" id="Y3x-el-dwG"/>
                             <constraint firstItem="2YJ-eL-VVt" firstAttribute="top" secondItem="kl9-uA-0Y3" secondAttribute="bottom" constant="58" id="YBd-ai-pc0"/>
                             <constraint firstItem="Ixf-YV-45O" firstAttribute="leading" secondItem="RzJ-4i-Xgz" secondAttribute="trailing" constant="8" id="Z3e-k1-JZZ"/>
                             <constraint firstItem="2YJ-eL-VVt" firstAttribute="leading" secondItem="dJZ-cx-CR2" secondAttribute="leadingMargin" id="apK-P9-KJ3"/>
@@ -272,9 +294,10 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="contentField" destination="QJm-Nh-mf4" id="qh7-CS-x9F"/>
-                        <outlet property="deleteButton" destination="Ixf-YV-45O" id="egt-fx-ZUH"/>
+                        <outlet property="deleteButton" destination="6BI-lT-TVK" id="v6E-rb-sub"/>
                         <outlet property="hoursField" destination="RzJ-4i-Xgz" id="8gt-7s-56P"/>
                         <outlet property="titleField" destination="2YJ-eL-VVt" id="eQn-tI-K0p"/>
+                        <outlet property="updateButton" destination="Ixf-YV-45O" id="We7-b6-XWL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kpi-HB-Tjh" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -369,7 +392,7 @@
                                     <constraint firstAttribute="height" constant="50" id="1tc-bh-dgM"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                             </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

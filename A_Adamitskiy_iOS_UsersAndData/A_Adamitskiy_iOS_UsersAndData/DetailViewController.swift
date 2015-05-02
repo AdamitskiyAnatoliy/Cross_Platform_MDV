@@ -17,6 +17,7 @@ class DetailViewController: UIViewController {
     var noteHours = ""
     var mainObject:PFObject!
     @IBOutlet var deleteButton: MKButton!
+    @IBOutlet var updateButton: MKButton!
     @IBOutlet var titleField: MKTextField!
     @IBOutlet var contentField: MKTextField!
     @IBOutlet var hoursField: MKTextField!
@@ -29,6 +30,12 @@ class DetailViewController: UIViewController {
         deleteButton.layer.shadowRadius = 2.5
         deleteButton.layer.shadowColor = UIColor.blackColor().CGColor
         deleteButton.layer.shadowOffset = CGSize(width: 1.0, height: 5.0)
+        
+        updateButton.cornerRadius = 30.0
+        updateButton.layer.shadowOpacity = 0.50
+        updateButton.layer.shadowRadius = 2.5
+        updateButton.layer.shadowColor = UIColor.blackColor().CGColor
+        updateButton.layer.shadowOffset = CGSize(width: 1.0, height: 5.0)
         
         titleField.floatingPlaceholderEnabled = true
         titleField.cornerRadius = 0
@@ -57,7 +64,6 @@ class DetailViewController: UIViewController {
         hoursField.bottomBorderEnabled = true
         hoursField.text = noteHours
         
-        println("\(mainObject)")
     }
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
@@ -71,10 +77,49 @@ class DetailViewController: UIViewController {
     
     @IBAction func deleteNote(sender: MKButton) {
         
-        mainObject.deleteInBackground()
-        self.navigationController?.popViewControllerAnimated(true)
+        if Reachability.isConnectedToNetwork() {
+            mainObject.deleteInBackground()
+            self.navigationController?.popViewControllerAnimated(true)
+        } else {
+            let alert: UIAlertView = UIAlertView(title: "No Network Connection",
+                message: "Please Reconnect Network.", delegate: nil, cancelButtonTitle: "Ok")
+            alert.show()
+        }
     }
- 
+    
+    @IBAction func updateNote(sender: MKButton) {
+        
+        if Reachability.isConnectedToNetwork() {
+            
+            if titleField.text == "" || contentField.text == "" || hoursField.text == "" {
+                
+                let alert: UIAlertView = UIAlertView(title: "Fill Out all Fields",
+                    message: "Please Fill Out Entire Form.", delegate: nil, cancelButtonTitle: "Ok")
+                alert.show()
+            } else {
+                
+                var query = PFQuery(className:"Note")
+                query.getObjectInBackgroundWithId(mainObject.objectId!) {
+                    (privateNote: PFObject?, error: NSError?) -> Void in
+                    if error != nil {
+                        println(error)
+                    } else if let privateNote = privateNote {
+                        privateNote["title"] = "\(self.titleField.text)"
+                        privateNote["content"] = "\(self.contentField.text)"
+                        privateNote["hours"] = "\(self.hoursField.text)"
+                        privateNote["noteType"] = "text"
+                        privateNote.saveInBackground()
+                    }
+                }
+                self.navigationController?.popViewControllerAnimated(true)
+            }
+        } else {
+            let alert: UIAlertView = UIAlertView(title: "No Network Connection",
+                message: "Please Reconnect Network.", delegate: nil, cancelButtonTitle: "Ok")
+            alert.show()
+        }
+    }
+    
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
         self.view.endEditing(true);
     }

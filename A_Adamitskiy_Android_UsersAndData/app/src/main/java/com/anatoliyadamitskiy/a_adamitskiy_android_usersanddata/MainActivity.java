@@ -7,7 +7,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
@@ -17,29 +20,50 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.dexafree.materialList.cards.BasicButtonsCard;
+import com.dexafree.materialList.cards.BasicCard;
+import com.dexafree.materialList.cards.BasicImageButtonsCard;
+import com.dexafree.materialList.cards.BasicListCard;
+import com.dexafree.materialList.cards.BigImageCard;
+import com.dexafree.materialList.cards.SimpleCard;
+import com.dexafree.materialList.cards.SmallImageCard;
+import com.dexafree.materialList.controller.MaterialListAdapter;
+import com.dexafree.materialList.controller.OnDismissCallback;
+import com.dexafree.materialList.controller.RecyclerItemClickListener;
+import com.dexafree.materialList.model.Card;
+import com.dexafree.materialList.model.CardItemView;
+import com.dexafree.materialList.view.MaterialListView;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
+import com.parse.GetDataCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import net.steamcrafted.loadtoast.LoadToast;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
 
-    ListView notesList;
+    MaterialListView notesList;
     ArrayList<Note> notesArrayList;
     ArrayList<ParseObject> parseArrayList;
     ParseObject parseNote;
-    ArrayAdapter<Note> adapter;
+    com.getbase.floatingactionbutton.FloatingActionsMenu addNoteMenu;
     int listPosition;
     public static final String DELETE_POST = "com.anatoliyadamitskiy.airball.DELETE_POST";
     public static final String UPDATE_POST = "com.anatoliyadamitskiy.airball.UPDATE_POST";
@@ -61,49 +85,121 @@ public class MainActivity extends ActionBarActivity {
             Toast.makeText(this, "Please Reconnect Network", Toast.LENGTH_LONG).show();
         }
 
-        notesList = (ListView) findViewById(R.id.noteListView);
+//        LoadToast lt = new LoadToast(this);
+//        lt.setText("Loading Notes...");
+//        lt.show();
+
+        addNoteMenu = (FloatingActionsMenu) findViewById(R.id.addNoteMenu);
+        notesList = (MaterialListView) findViewById(R.id.noteListView);
         parseArrayList = new ArrayList<>();
 
-        FloatingActionButton addButton = new FloatingActionButton.Builder(this)
-                .withDrawable(getResources().getDrawable(R.drawable.ic_action_add))
-                .withButtonColor(Color.rgb(33, 150, 243))
-                .withGravity(Gravity.BOTTOM | Gravity.RIGHT)
-                .withMargins(0, 0, 16, 16)
-                .create();
-
-        addButton.setOnClickListener(new View.OnClickListener() {
+        final View darkBack = (View) findViewById(R.id.blackBackground);
+        com.getbase.floatingactionbutton.FloatingActionsMenu addMenu =
+                (com.getbase.floatingactionbutton.FloatingActionsMenu) findViewById(R.id.addNoteMenu);
+        addNoteMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
             @Override
-            public void onClick(View v) {
-
-                if (network.checkNetwork()) {
-                    Intent intent = new Intent(getApplicationContext(), NewNoteActivity.class);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(getApplicationContext(), "Please Reconnect Network", Toast.LENGTH_LONG).show();
-                }
-
+            public void onMenuExpanded() {
+                darkBack.setVisibility(View.VISIBLE);
+            }
+            @Override
+            public void onMenuCollapsed() {
+                darkBack.setVisibility(View.INVISIBLE);
             }
         });
 
-        notesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        darkBack.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onClick(View v) {
+                addNoteMenu.collapse();
+                darkBack.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        com.getbase.floatingactionbutton.FloatingActionButton newNoteButton =
+                (com.getbase.floatingactionbutton.FloatingActionButton)findViewById(R.id.newNoteButton);
+        newNoteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (network.checkNetwork()) {
+                    Intent intent = new Intent(getApplicationContext(), NewNoteActivity.class);
+                    startActivity(intent);
+                    addNoteMenu.collapse();
+                } else {
+                    addNoteMenu.collapse();
+                    Toast.makeText(getApplicationContext(), "Please Reconnect Network", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        com.getbase.floatingactionbutton.FloatingActionButton newListNoteButton =
+                (com.getbase.floatingactionbutton.FloatingActionButton)findViewById(R.id.newListNoteButton);
+        newListNoteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (network.checkNetwork()) {
+                    Intent intent = new Intent(getApplicationContext(), NewListNoteActivity.class);
+                    startActivity(intent);
+                    addNoteMenu.collapse();
+                } else {
+                    addNoteMenu.collapse();
+                    Toast.makeText(getApplicationContext(), "Please Reconnect Network", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        com.getbase.floatingactionbutton.FloatingActionButton newImageNoteButton =
+                (com.getbase.floatingactionbutton.FloatingActionButton)findViewById(R.id.newImageNoteButton);
+        newImageNoteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (network.checkNetwork()) {
+                    Intent intent = new Intent(getApplicationContext(), NewImageNoteActivity.class);
+                    startActivity(intent);
+                    addNoteMenu.collapse();
+                } else {
+                    addNoteMenu.collapse();
+                    Toast.makeText(getApplicationContext(), "Please Reconnect Network", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        notesList.addOnItemTouchListener(new RecyclerItemClickListener.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(CardItemView view, int position) {
 
                 listPosition = position;
                 Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
                 intent.putExtra("Note", notesArrayList.get(position));
                 startActivity(intent);
+                addNoteMenu.collapse();
+            }
 
+            @Override
+            public void onItemLongClick(CardItemView view, int position) {
+                Log.d("LONG_CLICK", view.getTag().toString());
             }
         });
 
+        notesList.setOnDismissCallback(new OnDismissCallback() {
+            @Override
+            public void onDismiss(Card card, int i) {
+                if (network.checkNetwork()) {
+                    //parseArrayList.get(i).deleteInBackground();
+                    listPosition = i;
+                    Intent intent = new Intent(DELETE_POST);
+                    sendBroadcast(intent);
+
+                }
+            }
+        });
     }
 
     public Runnable updater = new Runnable() {
         @Override
         public void run() {
             refreshNoteList();
-            mHandler.postDelayed(updater,30000); // 5 seconds
+            mHandler.postDelayed(updater,100000);
         }
     };
 
@@ -128,7 +224,6 @@ public class MainActivity extends ActionBarActivity {
                 startRepeating();
             } else {
                 Intent intent = new Intent(this, LogInActivity.class);
-                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
         } else {
@@ -138,7 +233,6 @@ public class MainActivity extends ActionBarActivity {
 
             if (prefs.getBoolean("loggedIn", false) == false) {
                 Intent intent = new Intent(this, LogInActivity.class);
-                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
         }
@@ -149,10 +243,85 @@ public class MainActivity extends ActionBarActivity {
         this.registerReceiver(broadcastReceiver, filter);
 
         notesArrayList = new ArrayList<>();
-        adapter = new ArrayAdapter<Note>(this, R.layout.item_layout, notesArrayList);
-        notesList.setAdapter(adapter);
+        //fillArray();
+        //adapter = new MaterialListAdapter();
+
+
+        //
+        // adapter = new ArrayAdapter<Note>(this, R.layout.item_layout, notesArrayList);
+        //notesList.setAdapter(adapter);
         refreshNoteList();
 
+    }
+
+    private void fillArray() {
+        notesList.clear();
+        for (int i = 0; i < parseArrayList.size(); i++) {
+            Card card = addCards(i);
+            notesList.add(card);
+        }
+    }
+
+    private Card addCards(int i){
+
+        if (notesArrayList.get(i).getNoteType().equals("text")) {
+
+            VerySimpleCard card = new VerySimpleCard(this);
+            card.setTitle(notesArrayList.get(i).getTitle());
+            card.setDescription(notesArrayList.get(i).getNote());
+            card.setTag("VERY_BASIC_CARD");
+            card.setDismissible(true);
+            return card;
+
+        } else if (notesArrayList.get(i).getNoteType().equals("list")) {
+
+            BasicListCard card = new BasicListCard(this);
+            card.setDividerVisible(true);
+            card.setTitle(notesArrayList.get(i).getTitle());
+            card.setDescription(notesArrayList.get(i).getNote());
+            BasicListAdapter adapter = new BasicListAdapter(this);
+            adapter.add("Text1");
+            adapter.add("Text2");
+            adapter.add("Text3");
+            card.setTag("LIST_CARD");
+            ((BasicListCard) card).setAdapter(adapter);
+            ((BasicListCard) card).setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    // Do what ever you want...
+                    Toast.makeText(getApplicationContext(), position, Toast.LENGTH_SHORT).show();
+                    //boolean checked = card.isItemChecked(card.getItems().get(position));
+                    //card.setItemChecked(position, !checked);
+                }
+            });
+            card.setDismissible(true);
+
+            return card;
+
+        } else if (notesArrayList.get(i).getNoteType().equals("image")) {
+
+            final BigImageCard card = new BigImageCard(this);
+            card.setTitle(notesArrayList.get(i).getTitle());
+            card.setDescription(notesArrayList.get(i).getNote());
+            ParseFile image = notesArrayList.get(i).getImage();
+            image.getDataInBackground(new GetDataCallback() {
+                public void done(byte[] data, ParseException e) {
+                    if (e == null) {
+
+                        Drawable d = new BitmapDrawable(getResources(), BitmapFactory.decodeByteArray(data, 0, data.length));
+                        card.setDrawable(d);
+
+                    } else {
+
+                    }
+                }
+            });
+            card.setTag("BIG_IMAGE_CARD");
+            card.setDismissible(true);
+
+            return card;
+        }
+        return null;
     }
 
     @Override
@@ -174,10 +343,20 @@ public class MainActivity extends ActionBarActivity {
                         for (ParseObject post : postList) {
                             parseNote = post;
                             parseArrayList.add(post);
-                            Note note = new Note(post.getString("content"), post.getString("title"), Integer.parseInt(post.getString("hours")));
+                            Note note = null;
+                            if (post.getString("noteType").equals("text")) {
+                                note = new Note(post.getString("content"), post.getString("title"),
+                                        post.getString("noteType"), null, Integer.parseInt(post.getString("hours")));
+                            } else if (post.getString("noteType").equals("list")) {
+                                note = new Note(post.getString("content"), post.getString("title"),
+                                        post.getString("noteType"), null, Integer.parseInt(post.getString("hours")));
+                            } else if (post.getString("noteType").equals("image")) {
+                                note = new Note(post.getString("content"), post.getString("title"),
+                                        post.getString("noteType"), post.getParseFile("image"), Integer.parseInt(post.getString("hours")));
+                            }
                             notesArrayList.add(note);
                         }
-                        adapter.notifyDataSetChanged();
+                        fillArray();
                     } else {
                         Log.d(getClass().getSimpleName(), "Error: " + e.getMessage());
                     }
@@ -241,7 +420,6 @@ public class MainActivity extends ActionBarActivity {
                 ParseUser currentUser = ParseUser.getCurrentUser();
 
                 Intent intent = new Intent(getApplicationContext(), LogInActivity.class);
-                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             } else {
                 // Manually log user out
@@ -252,67 +430,16 @@ public class MainActivity extends ActionBarActivity {
                 editor.commit();
 
                 Intent intent = new Intent(getApplicationContext(), LogInActivity.class);
-                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
             return true;
+        } else if (id == R.id.action_refresh) {
+            if (network.checkNetwork()) {
+                fillArray();
+            } else {
+                Toast.makeText(getApplicationContext(), "Please Reconnect Network", Toast.LENGTH_SHORT).show();
+            }
         }
-
         return super.onOptionsItemSelected(item);
-    }
-
-//    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-//        Toast.makeText(this, "NO BACK", Toast.LENGTH_SHORT).show();
-//    }
-
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//
-//        // Back?
-//        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            // Back
-//            moveTaskToBack(true);
-//            return true;
-//        }
-//        else {
-//            // Return
-//            return super.onKeyDown(keyCode, event);
-//        }
-//    }
-
-    @Override
-    public void onBackPressed() {
-
-        super.onBackPressed();
-
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-
-        // Setting Dialog Title
-        alertDialog.setTitle("Signout your app");
-
-
-        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog,int which) {
-
-                dialog.cancel();
-            }
-        });
-
-
-        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-
-
-
-            }
-        });
-
-
-        alertDialog.show();
-
-
-
     }
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C34B3751AF2BF2C003E92C8 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C34B3741AF2BF2C003E92C8 /* Reachability.swift */; };
 		1C3F84481ADC0C3B00AAB255 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3F84471ADC0C3B00AAB255 /* AppDelegate.swift */; };
 		1C3F844A1ADC0C3B00AAB255 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3F84491ADC0C3B00AAB255 /* ViewController.swift */; };
 		1C3F844D1ADC0C3B00AAB255 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1C3F844B1ADC0C3B00AAB255 /* Main.storyboard */; };
@@ -56,6 +57,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1C34B3741AF2BF2C003E92C8 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		1C3F84421ADC0C3B00AAB255 /* A_Adamitskiy_iOS_UsersAndData.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = A_Adamitskiy_iOS_UsersAndData.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C3F84461ADC0C3B00AAB255 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1C3F84471ADC0C3B00AAB255 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -129,6 +131,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1C34B3761AF2FCF4003E92C8 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				1C5A69371AE1EB270047E886 /* Note.swift */,
+				1C34B3741AF2BF2C003E92C8 /* Reachability.swift */,
+			);
+			name = Other;
+			sourceTree = "<group>";
+		};
 		1C3F84391ADC0C3B00AAB255 = {
 			isa = PBXGroup;
 			children = (
@@ -157,10 +168,10 @@
 				1C3F846B1ADC0FE400AAB255 /* NewNoteViewController.swift */,
 				1C3F84671ADC0F2D00AAB255 /* LoginViewController.swift */,
 				1C3F84691ADC0F4700AAB255 /* SignUpViewController.swift */,
-				1C5A69371AE1EB270047E886 /* Note.swift */,
 				1C3F847F1ADC19D400AAB255 /* Material Kit */,
-				1C3F844B1ADC0C3B00AAB255 /* Main.storyboard */,
+				1C34B3761AF2FCF4003E92C8 /* Other */,
 				1C4E2C411ADCBBDF00023624 /* UI Assets */,
+				1C3F844B1ADC0C3B00AAB255 /* Main.storyboard */,
 				1C3F844E1ADC0C3B00AAB255 /* Images.xcassets */,
 				1C3F84501ADC0C3B00AAB255 /* LaunchScreen.xib */,
 				1C3F84451ADC0C3B00AAB255 /* Supporting Files */,
@@ -366,6 +377,7 @@
 				1C3F846A1ADC0F4700AAB255 /* SignUpViewController.swift in Sources */,
 				1C3F847E1ADC19BB00AAB255 /* MKTextField.swift in Sources */,
 				1C3F84791ADC19BB00AAB255 /* MKColor.swift in Sources */,
+				1C34B3751AF2BF2C003E92C8 /* Reachability.swift in Sources */,
 				1C3F84481ADC0C3B00AAB255 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

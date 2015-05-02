@@ -34,25 +34,50 @@ class LoginViewController: UIViewController {
     
     @IBAction func logIn(sender: MKButton) {
         
-        PFUser.logInWithUsernameInBackground(usernameField.text, password: passwordField.text) {
-            (user: PFUser?, error: NSError?) -> Void in
-            if user != nil {
-
-                self.dismissViewControllerAnimated(true, completion: nil)
+        if Reachability.isConnectedToNetwork() {
+        
+            if usernameField.text == "" || passwordField.text == "" {
+                
+                let alert: UIAlertView = UIAlertView(title: "Fill Out all Fields",
+                    message: "Please Fill Out Entire Form.", delegate: nil, cancelButtonTitle: "Ok")
+                alert.show()
             } else {
                 
-                let alert: UIAlertView = UIAlertView(title: "Login Failed.",
-                    message: "Please try again.", delegate: nil, cancelButtonTitle: "Ok")
-                alert.show()
+                PFUser.logInWithUsernameInBackground(usernameField.text, password: passwordField.text) {
+                    (user: PFUser?, error: NSError?) -> Void in
+                    if user != nil {
+
+                        self.dismissViewControllerAnimated(true, completion: nil)
+                    } else {
+                        
+                        let alert: UIAlertView = UIAlertView(title: "Login Failed.",
+                            message: "Please try again.", delegate: nil, cancelButtonTitle: "Ok")
+                        alert.show()
+                    }
+                }
             }
+            
+        } else {
+            
+            let alert: UIAlertView = UIAlertView(title: "No Network Connection",
+                message: "Please Reconnect Network.", delegate: nil, cancelButtonTitle: "Ok")
+            alert.show()
         }
     }
     
     @IBAction func signUp(sender: MKButton) {
         
-        let logInVC: UIViewController = self.storyboard!.instantiateViewControllerWithIdentifier("SignUpController") as! UIViewController
-        self.presentViewController(logInVC, animated: true, completion: nil)
-        //self.navigationController!.pushViewController(self.storyboard!.instantiateViewControllerWithIdentifier("SignUpController") as! UIViewController, animated: true)
+        if Reachability.isConnectedToNetwork() {
+        
+            let logInVC: UIViewController = self.storyboard!.instantiateViewControllerWithIdentifier("SignUpController") as! UIViewController
+            self.presentViewController(logInVC, animated: true, completion: nil)
+            
+        } else {
+            
+            let alert: UIAlertView = UIAlertView(title: "No Network Connection",
+                message: "Please Reconnect Network.", delegate: nil, cancelButtonTitle: "Ok")
+            alert.show()
+        }
     }
     
     
